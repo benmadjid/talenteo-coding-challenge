@@ -3,7 +3,17 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Outlet } from "@tanstack/react-router"
+import { AddEmployeeModal } from "@/features/employees/components/add-employee-modal"
+import { useEmployeeStore } from "@/features/employees/store/use-employee-store"
+import { useShallow } from "zustand/shallow"
 const DashboardLayout = () => {
+    const { isAddModalOpen, setIsAddModalOpen } = useEmployeeStore(
+        useShallow((state) => ({
+            isAddModalOpen: state.isAddModalOpen,
+            setIsAddModalOpen: state.setIsAddModalOpen,
+        }))
+    )
+
     return <SidebarProvider
         style={
             {
@@ -17,6 +27,10 @@ const DashboardLayout = () => {
             <SiteHeader />
             <Outlet />
         </SidebarInset>
+        <AddEmployeeModal
+            open={isAddModalOpen}
+            onOpenChange={setIsAddModalOpen}
+        />
     </SidebarProvider>
 }
 export default DashboardLayout
