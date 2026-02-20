@@ -1,11 +1,13 @@
 import {
   IconDashboard,
+  IconFile,
   IconHelp,
   IconInnerShadowTop,
   IconSearch,
   IconSettings,
   IconUsers
 } from "@tabler/icons-react"
+import { Link } from "@tanstack/react-router"
 import * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
@@ -34,8 +36,13 @@ const data = {
       icon: IconDashboard,
     },
     {
+      title: "Documents",
+      url: "/documents",
+      icon: IconFile,
+    },
+    {
       title: "Employees",
-      url: "#",
+      url: "/employees",
       icon: IconUsers,
     },
 
@@ -69,10 +76,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <Link to="/documents">
                 <IconInnerShadowTop className="!size-5" />
                 <span className="text-base font-semibold">Talenteo</span>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
