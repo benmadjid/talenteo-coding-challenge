@@ -6,7 +6,9 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 import { EmployeeForm } from "../employee-form";
+import { EmployeeFormSkeleton } from "../employee-form-skeleton";
 import { useUpdateEmployee } from "../../data/mutations";
+import { useEmployee } from "../../data/queries";
 import type { EmployeeFormValues } from "../../schemas/employee-schema";
 import type { Employee } from "../../types/employee";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -25,11 +27,20 @@ export function EditEmployeeModal({
     const { mutate: updateEmployee, isPending } = useUpdateEmployee();
     const isMobile = useIsMobile();
 
+    const employeeId = employee?.id ?? "";
+    const {
+        data: employeeDetails,
+        isLoading: isEmployeeLoading,
+        isError: isEmployeeError,
+    } = useEmployee(employeeId);
+
+    const currentEmployee = employeeDetails ?? employee;
+
     const onSubmit = (values: EmployeeFormValues) => {
-        if (!employee) return;
+        if (!currentEmployee) return;
 
         updateEmployee(
-            { id: employee.id, employee: values },
+            { id: currentEmployee.id, employee: values },
             {
                 onSuccess: () => {
                     toast.success("Employee updated successfully");
@@ -50,12 +61,24 @@ export function EditEmployeeModal({
                 </DrawerHeader>
                 <div className="overflow-y-auto px-4 pb-4">
                     {employee && (
-                        <EmployeeForm
-                            employee={employee}
-                            onSubmit={onSubmit}
-                            onCancel={() => onOpenChange(false)}
-                            isSubmitting={isPending}
-                        />
+                        <>
+                            {isEmployeeLoading && <EmployeeFormSkeleton />}
+
+                            {isEmployeeError && (
+                                <div className="py-8 text-center text-sm text-destructive">
+                                    Failed to load employee details.
+                                </div>
+                            )}
+
+                            {!isEmployeeLoading && !isEmployeeError && currentEmployee && (
+                                <EmployeeForm
+                                    employee={currentEmployee}
+                                    onSubmit={onSubmit}
+                                    onCancel={() => onOpenChange(false)}
+                                    isSubmitting={isPending}
+                                />
+                            )}
+                        </>
                     )}
                 </div>
             </DrawerContent>

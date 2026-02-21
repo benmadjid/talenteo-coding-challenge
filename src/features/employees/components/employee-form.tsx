@@ -17,6 +17,7 @@ import {
 import { useEmployeeForm } from "../hooks/useEmployeeForm";
 import type { EmployeeFormValues } from "../schemas/employee-schema";
 import type { Employee } from "../types/employee";
+import { IconGenderFemale, IconGenderMale } from "@tabler/icons-react";
 
 interface EmployeeFormProps {
     employee?: Employee;
@@ -105,13 +106,13 @@ export function EmployeeForm({
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Gender</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value ?? undefined}>
                                     <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Select gender" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="male">Male</SelectItem>
-                                        <SelectItem value="female">Female</SelectItem>
+                                        <SelectItem value="male"> <IconGenderMale className="text-blue-500" /> Male</SelectItem>
+                                        <SelectItem value="female"> <IconGenderFemale className="text-pink-500" /> Female</SelectItem>
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
