@@ -6,9 +6,11 @@ import {
     DrawerTitle,
 } from "@/components/ui/drawer";
 import { EmployeeForm } from "../employee-form";
-import { useCreateEmployee } from "../../data/mutations";
+import { useCreateEmployee, getErrorMessage } from "../../data/mutations";
 import type { EmployeeFormValues } from "../../schemas/employee-schema";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { IconUserPlus, IconX } from "@tabler/icons-react";
+import React from "react";
 
 interface AddEmployeeModalProps {
     open: boolean;
@@ -23,12 +25,18 @@ export function AddEmployeeModal({ open, onOpenChange }: AddEmployeeModalProps) 
         createEmployee(
             { ...values, avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${values.email}` },
             {
-                onSuccess: () => {
-                    toast.success("Employee created successfully");
+                onSuccess: (data) => {
+                    toast.success("Employee created successfully", {
+                        description: `${data.firstName} ${data.lastName} has been added to the team.`,
+                        icon: React.createElement(IconUserPlus, { size: 18 }),
+                    });
                     onOpenChange(false);
                 },
                 onError: (error) => {
-                    toast.error(error instanceof Error ? error.message : "Failed to create employee");
+                    toast.error("Failed to create employee", {
+                        description: getErrorMessage(error),
+                        icon: React.createElement(IconX, { size: 18 }),
+                    });
                 },
             }
         );

@@ -3,11 +3,8 @@ import { AxiosError } from "axios";
 import { employeeService } from "../services/employee-service";
 import { EMPLOYEE_KEYS } from "./keys";
 import type { CreateEmployeeDto, UpdateEmployeeDto } from "../types/employee";
-import { toast } from "sonner";
-import { IconUserPlus, IconUserEdit, IconUserMinus, IconX } from "@tabler/icons-react";
-import React from "react";
 
-function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: unknown): string {
     if (error instanceof AxiosError && error.response?.data && typeof error.response.data === "object" && "message" in error.response.data) {
         return String((error.response.data as { message?: string }).message);
     }
@@ -20,19 +17,9 @@ export const useCreateEmployee = () => {
     return useMutation({
         mutationKey: EMPLOYEE_KEYS.mutations.create(),
         mutationFn: (employee: CreateEmployeeDto) => employeeService.createEmployee(employee),
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: EMPLOYEE_KEYS.lists() });
-            toast.success("Employee created successfully", {
-                description: `${data.firstName} ${data.lastName} has been added to the team.`,
-                icon: React.createElement(IconUserPlus, { size: 18 }),
-            });
         },
-        onError: (error: unknown) => {
-            toast.error("Failed to create employee", {
-                description: getErrorMessage(error),
-                icon: React.createElement(IconX, { size: 18 }),
-            });
-        }
     });
 };
 
@@ -43,20 +30,10 @@ export const useUpdateEmployee = () => {
         mutationKey: EMPLOYEE_KEYS.mutations.update(),
         mutationFn: ({ id, employee }: { id: string; employee: UpdateEmployeeDto }) =>
             employeeService.updateEmployee(id, employee),
-        onSuccess: (data, { id }) => {
+        onSuccess: (_, { id }) => {
             queryClient.invalidateQueries({ queryKey: EMPLOYEE_KEYS.lists() });
             queryClient.invalidateQueries({ queryKey: EMPLOYEE_KEYS.detail(id) });
-            toast.success("Employee updated successfully", {
-                description: `${data.firstName} ${data.lastName}'s profile has been updated.`,
-                icon: React.createElement(IconUserEdit, { size: 18, className: "text-blue-500" }),
-            });
         },
-        onError: (error: unknown) => {
-            toast.error("Failed to update employee", {
-                description: getErrorMessage(error),
-                icon: React.createElement(IconX, { size: 18 }),
-            });
-        }
     });
 };
 
@@ -68,16 +45,6 @@ export const useDeleteEmployee = () => {
         mutationFn: (id: string) => employeeService.deleteEmployee(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: EMPLOYEE_KEYS.lists() });
-            toast.success("Employee deleted successfully", {
-                description: `Employee has been removed from the system.`,
-                icon: React.createElement(IconUserMinus, { size: 18, className: "text-red-500" }),
-            });
         },
-        onError: (error: unknown) => {
-            toast.error("Failed to delete employee", {
-                description: getErrorMessage(error),
-                icon: React.createElement(IconX, { size: 18 }),
-            });
-        }
     });
 };

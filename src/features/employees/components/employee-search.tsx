@@ -6,7 +6,7 @@ import { useDebounce } from "@/hooks/useDebounce"
 import { useShallow } from "zustand/shallow"
 
 export const EmployeesSearch = () => {
-    const [, setFilters] = useEmployeeStore(useShallow((s) => [s.filters.search, s.setFilters]))
+    const { setFilters } = useEmployeeStore(useShallow((s) => ({ search: s.filters.search, setFilters: s.setFilters })))
     const [search, setSearch] = useState<string | undefined>()
     const debouncedSearch = useDebounce(search, 500)
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {

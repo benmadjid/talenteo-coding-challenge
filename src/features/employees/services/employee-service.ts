@@ -14,6 +14,7 @@ export const employeeService = {
                     return [];
                 }
             }
+            throw error;
         }
     },
 

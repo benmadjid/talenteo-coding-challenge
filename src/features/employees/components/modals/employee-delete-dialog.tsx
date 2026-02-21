@@ -8,8 +8,10 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDeleteEmployee } from "../../data/mutations";
+import { useDeleteEmployee, getErrorMessage } from "../../data/mutations";
 import type { Employee } from "../../types/employee";
+import { IconUserMinus, IconX } from "@tabler/icons-react";
+import React from "react";
 
 interface DeleteEmployeeDialogProps {
     employee: Employee | null;
@@ -29,11 +31,17 @@ export function DeleteEmployeeDialog({
 
         deleteEmployee(employee.id, {
             onSuccess: () => {
-                toast.success("Employee deleted successfully");
+                toast.success("Employee deleted successfully", {
+                    description: "Employee has been removed from the system.",
+                    icon: React.createElement(IconUserMinus, { size: 18, className: "text-red-500" }),
+                });
                 onOpenChange(false);
             },
             onError: (error) => {
-                toast.error(error instanceof Error ? error.message : "Failed to delete employee");
+                toast.error("Failed to delete employee", {
+                    description: getErrorMessage(error),
+                    icon: React.createElement(IconX, { size: 18 }),
+                });
             },
         });
     };

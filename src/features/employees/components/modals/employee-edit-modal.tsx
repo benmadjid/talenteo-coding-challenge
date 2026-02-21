@@ -7,11 +7,13 @@ import {
 } from "@/components/ui/drawer";
 import { EmployeeForm } from "../employee-form";
 import { EmployeeFormSkeleton } from "../employee-form-skeleton";
-import { useUpdateEmployee } from "../../data/mutations";
+import { useUpdateEmployee, getErrorMessage } from "../../data/mutations";
 import { useEmployee } from "../../data/queries";
 import type { EmployeeFormValues } from "../../schemas/employee-schema";
 import type { Employee } from "../../types/employee";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { IconUserEdit, IconX } from "@tabler/icons-react";
+import React from "react";
 
 interface EditEmployeeModalProps {
     employee: Employee | null;
@@ -42,12 +44,18 @@ export function EditEmployeeModal({
         updateEmployee(
             { id: currentEmployee.id, employee: values },
             {
-                onSuccess: () => {
-                    toast.success("Employee updated successfully");
+                onSuccess: (data) => {
+                    toast.success("Employee updated successfully", {
+                        description: `${data.firstName} ${data.lastName}'s profile has been updated.`,
+                        icon: React.createElement(IconUserEdit, { size: 18, className: "text-blue-500" }),
+                    });
                     onOpenChange(false);
                 },
                 onError: (error) => {
-                    toast.error(error instanceof Error ? error.message : "Failed to update employee");
+                    toast.error("Failed to update employee", {
+                        description: getErrorMessage(error),
+                        icon: React.createElement(IconX, { size: 18 }),
+                    });
                 },
             }
         );
