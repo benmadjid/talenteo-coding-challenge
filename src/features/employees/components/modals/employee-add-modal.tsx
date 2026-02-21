@@ -5,9 +5,9 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
-import { EmployeeForm } from "./employee-form";
-import { useCreateEmployee } from "../data/mutations";
-import type { EmployeeFormValues } from "../schemas/employee-schema";
+import { EmployeeForm } from "../employee-form";
+import { useCreateEmployee } from "../../data/mutations";
+import type { EmployeeFormValues } from "../../schemas/employee-schema";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface AddEmployeeModalProps {
@@ -36,7 +36,7 @@ export function AddEmployeeModal({ open, onOpenChange }: AddEmployeeModalProps) 
 
     return (
         <Drawer open={open} onOpenChange={onOpenChange} direction={isMobile ? "bottom" : "right"}>
-            <DrawerContent className={isMobile ? "" : "h-full w-[500px] mt-0 rounded-none"}>
+            <DrawerContent className={"h-full md:w-[500px]! mt-0 rounded-none"}>
                 <DrawerHeader>
                     <DrawerTitle>Add New Employee</DrawerTitle>
                 </DrawerHeader>

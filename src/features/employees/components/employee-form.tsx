@@ -14,7 +14,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useEmployeeForm } from "../hooks/use-employee-form";
+import { useEmployeeForm } from "../hooks/useEmployeeForm";
 import type { EmployeeFormValues } from "../schemas/employee-schema";
 import type { Employee } from "../types/employee";
 
@@ -148,7 +148,7 @@ export function EmployeeForm({
                         Cancel
                     </Button>
                     <Button type="submit" disabled={isSubmitting}>
-                        {employee ? "Update Employee" : "Add Employee"}
+                        {isSubmitting ? "Saving..." : employee ? "Update Employee" : "Add Employee"}
                     </Button>
                 </div>
             </form>

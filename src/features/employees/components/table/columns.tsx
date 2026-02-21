@@ -1,9 +1,7 @@
-import { useSortable } from "@dnd-kit/sortable"
 import {
     IconDotsVertical,
     IconGenderFemale,
     IconGenderMale,
-    IconGripVertical,
 } from "@tabler/icons-react"
 import type { ColumnDef } from "@tanstack/react-table"
 
@@ -22,24 +20,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { Employee } from "../types/employee"
-
-function DragHandle({ id }: { id: string }) {
-    const { attributes, listeners } = useSortable({ id })
-    return (
-        <Button
-            {...attributes}
-            {...listeners}
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground size-7 hover:bg-transparent"
-        >
-            <IconGripVertical className="text-muted-foreground size-3" />
-            <span className="sr-only">Drag to reorder</span>
-        </Button>
-    )
-}
-
+import type { Employee } from "../../types/employee"
+import { DragHandle } from "./drag-handle"
 
 function getInitials(firstName: string, lastName: string) {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
@@ -50,6 +32,7 @@ export const columns: ColumnDef<Employee>[] = [
         id: "drag",
         header: () => null,
         cell: ({ row }) => <DragHandle id={row.original.id} />,
+        enableHiding: false
     },
     {
         id: "select",
@@ -196,8 +179,6 @@ export const columns: ColumnDef<Employee>[] = [
                         <DropdownMenuItem onClick={() => meta?.onEdit?.(employee)}>
                             Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-                        <DropdownMenuItem>Favorite</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             variant="destructive"

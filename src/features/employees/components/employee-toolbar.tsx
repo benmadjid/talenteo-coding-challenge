@@ -16,8 +16,8 @@ import {
 } from "@/components/ui/tabs"
 
 import { Label } from "@/components/ui/label"
-import { useEmployeeStore } from "../store/use-employee-store"
-import { columns } from "./columns"
+import { useEmployeeStore } from "../store/useEmployeeStore"
+import { columns } from "./table/columns"
 import { EmployeesSearch } from "./employee-search"
 import { useShallow } from "zustand/shallow"
 
@@ -65,7 +65,7 @@ export function EmployeeToolbar({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-56">
                             {hideableColumns.map((column) => {
-                                const columnId = column.id || (column as any).accessorKey
+                                const columnId = column.id ?? (column as { accessorKey?: string }).accessorKey
                                 if (!columnId) return null
 
 

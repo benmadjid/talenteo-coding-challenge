@@ -53,10 +53,12 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Skeleton } from "@/components/ui/skeleton"
-import type { Employee } from "../types/employee"
+import type { Employee } from "../../types/employee"
 import { columns } from "./columns"
-import { useEmployeeStore } from "../store/use-employee-store"
+import { TableEmptyState } from "./table-empty-state"
+import { TableErrorState } from "./table-error-state"
+import { TableLoadingState } from "./table-loading-state"
+import { useEmployeeStore } from "../../store/useEmployeeStore"
 import { useShallow } from "zustand/shallow"
 
 // Draggable row wrapper
@@ -89,6 +91,8 @@ interface DataTableProps {
     data: Employee[]
     isLoading?: boolean
     isError?: boolean
+    /** When true, empty data is shown as "no search results" instead of "no data" */
+    hasActiveSearch?: boolean
     onDataChange?: (newData: Employee[]) => void
     onEdit?: (employee: Employee) => void
     onDelete?: (employee: Employee) => void
@@ -98,6 +102,7 @@ export const DataTable = React.memo(({
     data,
     isLoading,
     isError,
+    hasActiveSearch = false,
     onDataChange,
     onEdit,
     onDelete
@@ -198,24 +203,9 @@ export const DataTable = React.memo(({
                         </TableHeader>
                         <TableBody className="**:data-[slot=table-cell]:first:w-8">
                             {isLoading ? (
-                                Array.from({ length: 5 }).map((_, i) => (
-                                    <TableRow key={i}>
-                                        {columns.map((_, j) => (
-                                            <TableCell key={j}>
-                                                <Skeleton className="h-6 w-full" />
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                ))
+                                <TableLoadingState columnCount={columns.length} />
                             ) : isError ? (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={columns.length}
-                                        className="h-24 text-center text-destructive font-medium"
-                                    >
-                                        Failed to load employees. Please try again.
-                                    </TableCell>
-                                </TableRow>
+                                <TableErrorState colSpan={columns.length} />
                             ) : table.getRowModel().rows?.length ? (
                                 <SortableContext
                                     items={dataIds}
@@ -229,14 +219,16 @@ export const DataTable = React.memo(({
                                     ))}
                                 </SortableContext>
                             ) : (
-                                <TableRow>
-                                    <TableCell
-                                        colSpan={columns.length}
-                                        className="h-24 text-center"
-                                    >
-                                        No results.
-                                    </TableCell>
-                                </TableRow>
+                                <TableEmptyState
+                                    colSpan={columns.length}
+                                    variant={
+                                        data.length === 0
+                                            ? hasActiveSearch
+                                                ? "no-search-results"
+                                                : "no-data"
+                                            : hasActiveSearch ? "no-search-results" : "no-filter-results"
+                                    }
+                                />
                             )}
                         </TableBody>
                     </Table>
@@ -259,8 +251,6 @@ export const DataTable = React.memo(({
                             value={`${table.getState().pagination.pageSize}`}
                             onValueChange={(value) => {
                                 table.setPageSize(Number(value))
-
-                                store.setFilters({ limit: Number(value) })
                             }}
                         >
                             <SelectTrigger

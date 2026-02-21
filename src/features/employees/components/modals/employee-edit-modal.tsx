@@ -5,10 +5,10 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
-import { EmployeeForm } from "./employee-form";
-import { useUpdateEmployee } from "../data/mutations";
-import type { EmployeeFormValues } from "../schemas/employee-schema";
-import type { Employee } from "../types/employee";
+import { EmployeeForm } from "../employee-form";
+import { useUpdateEmployee } from "../../data/mutations";
+import type { EmployeeFormValues } from "../../schemas/employee-schema";
+import type { Employee } from "../../types/employee";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EditEmployeeModalProps {

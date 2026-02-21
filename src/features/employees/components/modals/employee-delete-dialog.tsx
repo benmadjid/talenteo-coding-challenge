@@ -8,8 +8,8 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDeleteEmployee } from "../data/mutations";
-import type { Employee } from "../types/employee";
+import { useDeleteEmployee } from "../../data/mutations";
+import type { Employee } from "../../types/employee";
 
 interface DeleteEmployeeDialogProps {
     employee: Employee | null;

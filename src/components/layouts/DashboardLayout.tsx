@@ -3,8 +3,8 @@ import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Outlet } from "@tanstack/react-router"
-import { AddEmployeeModal } from "@/features/employees/components/add-employee-modal"
-import { useEmployeeStore } from "@/features/employees/store/use-employee-store"
+import { AddEmployeeModal } from "@/features/employees/components/modals/employee-add-modal"
+import { useEmployeeStore } from "@/features/employees/store/useEmployeeStore"
 import { useShallow } from "zustand/shallow"
 const DashboardLayout = () => {
     const { isAddModalOpen, setIsAddModalOpen } = useEmployeeStore(

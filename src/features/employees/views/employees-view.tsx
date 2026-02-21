@@ -1,14 +1,14 @@
 import { useEmployees } from "../data/queries"
-import { DataTable } from "../components/data-table"
+import { DataTable } from "../components/table/data-table"
 import { EmployeeToolbar } from "../components/employee-toolbar"
-import { useEmployeeStore } from "../store/use-employee-store"
+import { useEmployeeStore } from "../store/useEmployeeStore"
 import { useShallow } from "zustand/shallow"
 import { useEffect, useState } from "react"
-import { EditEmployeeModal } from "../components/edit-employee-modal"
-import { DeleteEmployeeDialog } from "../components/delete-employee-dialog"
+import { EditEmployeeModal } from "../components/modals/employee-edit-modal"
+import { DeleteEmployeeDialog } from "../components/modals/employee-delete-dialog"
 import type { Employee } from "../types/employee"
 
-export function EmployeesPage() {
+export function EmployeesView() {
     const {
         filters,
         setIsAddModalOpen,
@@ -19,11 +19,11 @@ export function EmployeesPage() {
 
     // --- Queries ---
     const { data, isLoading, isError } = useEmployees(filters)
+    const [employees, setEmployees] = useState<Employee[]>(data ?? [])
     useEffect(() => {
         if (isLoading) return
-        setEmployees(data)
-    }, [data])
-    const [employees, setEmployees] = useState(data)
+        setEmployees(data ?? [])
+    }, [data, isLoading])
 
     // --- Modal State ---
     const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null)
@@ -48,6 +48,7 @@ export function EmployeesPage() {
                         isError={isError}
                         onDataChange={setEmployees}
                         onEdit={handleEditEmployee}
+                        hasActiveSearch={!!filters.search?.trim()}
                         onDelete={handleDeleteEmployee}
                     />
                 </div>

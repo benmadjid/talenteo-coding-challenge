@@ -8,18 +8,15 @@ import type {
 } from "@tanstack/react-table"
 
 interface EmployeeState {
-    // --- API Filters ---
     filters: EmployeeFilters
     searchInput: string
 
-    // --- Table UI State ---
     sorting: SortingState
     columnVisibility: VisibilityState
     rowSelection: Record<string, boolean>
     columnFilters: ColumnFiltersState
     pagination: PaginationState
 
-    // --- Actions ---
     setFilters: (filters: Partial<EmployeeFilters>) => void
     setSearchInput: (input: string) => void
 
@@ -31,16 +28,14 @@ interface EmployeeState {
 
     resetFilters: () => void
 
-    // --- UI Modals ---
     isAddModalOpen: boolean
     setIsAddModalOpen: (open: boolean) => void
 }
 
 export const useEmployeeStore = create<EmployeeState>((set) => ({
-    // --- Initial State ---
     filters: {
         page: 1,
-        limit: 10,
+        limit: 2000,
         search: "",
     },
     searchInput: "",
@@ -54,7 +49,6 @@ export const useEmployeeStore = create<EmployeeState>((set) => ({
         pageSize: 10,
     },
 
-    // --- Actions ---
     setFilters: (newFilters) =>
         set((state) => ({
             filters: { ...state.filters, ...newFilters }
@@ -88,13 +82,12 @@ export const useEmployeeStore = create<EmployeeState>((set) => ({
         })),
 
     resetFilters: () => set({
-        filters: { page: 1, limit: 10, search: "" },
+        filters: { page: 1, limit: 2000, search: "" },
         searchInput: "",
         sorting: [],
         pagination: { pageIndex: 0, pageSize: 10 }
     }),
 
-    // --- UI Modals ---
     isAddModalOpen: false,
     setIsAddModalOpen: (open) => set({ isAddModalOpen: open })
 }))

@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { useEmployeeStore } from "@/features/employees/store/use-employee-store"
+import { useEmployeeStore } from "@/features/employees/store/useEmployeeStore"
 
 export function NavMain({
   items,

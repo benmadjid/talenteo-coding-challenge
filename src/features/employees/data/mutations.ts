@@ -1,10 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { employeeService } from "../services/employee-service";
 import { EMPLOYEE_KEYS } from "./keys";
 import type { CreateEmployeeDto, UpdateEmployeeDto } from "../types/employee";
 import { toast } from "sonner";
 import { IconUserPlus, IconUserEdit, IconUserMinus, IconX } from "@tabler/icons-react";
 import React from "react";
+
+function getErrorMessage(error: unknown): string {
+    if (error instanceof AxiosError && error.response?.data && typeof error.response.data === "object" && "message" in error.response.data) {
+        return String((error.response.data as { message?: string }).message);
+    }
+    return "An unexpected error occurred.";
+}
 
 export const useCreateEmployee = () => {
     const queryClient = useQueryClient();
@@ -19,9 +27,9 @@ export const useCreateEmployee = () => {
                 icon: React.createElement(IconUserPlus, { size: 18 }),
             });
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
             toast.error("Failed to create employee", {
-                description: error.response?.data?.message || "An unexpected error occurred.",
+                description: getErrorMessage(error),
                 icon: React.createElement(IconX, { size: 18 }),
             });
         }
@@ -43,9 +51,9 @@ export const useUpdateEmployee = () => {
                 icon: React.createElement(IconUserEdit, { size: 18, className: "text-blue-500" }),
             });
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
             toast.error("Failed to update employee", {
-                description: error.response?.data?.message || "An unexpected error occurred.",
+                description: getErrorMessage(error),
                 icon: React.createElement(IconX, { size: 18 }),
             });
         }
@@ -65,9 +73,9 @@ export const useDeleteEmployee = () => {
                 icon: React.createElement(IconUserMinus, { size: 18, className: "text-red-500" }),
             });
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
             toast.error("Failed to delete employee", {
-                description: error.response?.data?.message || "An unexpected error occurred.",
+                description: getErrorMessage(error),
                 icon: React.createElement(IconX, { size: 18 }),
             });
         }

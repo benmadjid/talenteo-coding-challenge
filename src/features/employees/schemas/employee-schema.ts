@@ -12,7 +12,7 @@ export const baseEmployeeSchema = z.object({
     dateOfBirth: z.string().refine((date) => !isNaN(Date.parse(date)) && Date.parse(date) < Date.now(), {
         message: "Invalid date of birth",
     }),
-    registratonNumber: z.coerce.number().positive("Registration number must be positive"),
+    registratonNumber: z.coerce.number().positive("Registration number must be positive").int("Registration number must be an integer"),
 });
 
 export const createEmployeeSchema = baseEmployeeSchema;
